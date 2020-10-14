@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
+import cookie from 'js-cookie'
 
 // 创建axios实例
 const service = axios.create({
@@ -10,6 +11,10 @@ const service = axios.create({
 // http request 拦截器
 service.interceptors.request.use(
   config => {
+    // 添加请求头
+    if (cookie.get('guli_token')) {
+      config.headers['token'] = cookie.get('guli_token')
+    }
     return config
   },
   error => {

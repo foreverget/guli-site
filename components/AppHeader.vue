@@ -91,6 +91,20 @@ export default {
       userInfo: null
     }
   },
+  mounted() {
+    // 微信登录url token获取
+    const token = this.$route.query.token
+    if (token) {
+      // 登录成功将token写入coockie
+      cookie.set('guli_token', token, {
+        domain: 'localhost',
+        expires: 1
+      })
+      // 跳转页面：擦除url中的token
+      // 注意：window对象在created方法中无法被访问，因此要写在mounted中
+      window.location.href = '/'
+    }
+  },
 
   created() {
     this.getUserInfo()

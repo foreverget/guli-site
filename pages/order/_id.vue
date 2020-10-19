@@ -33,18 +33,31 @@
           <a :href="'/course/'+order.courseId">返回课程详情页</a>
         </div>
       </div>
-      <el-button :disabled="!agree" type="danger">去支付</el-button>
+      <el-button :disabled="!agree" type="danger" @click="toPay()">去支付</el-button>
       <div class="clear"/>
     </div>
   </div>
 </template>
 
 <script>
+import orderApi from '~/api/order'
 export default {
   data() {
     return {
       order: {},
       agree: true
+    }
+  },
+  created() {
+    orderApi.getById(this.$route.params.id).then(response => {
+      this.order = response.data.item
+    })
+  },
+  methods: {
+    toPay() {
+      if (this.agree) {
+        this.$router.push({ path: '/pay/' + this.order.orderNo })
+      }
     }
   }
 }

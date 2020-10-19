@@ -39,7 +39,9 @@ module.exports = {
 
   plugins: [
     { src: '~/plugins/nuxt-swiper-plugin.js', ssr: false },
-    { src: '~/plugins/element-ui-plugin.js', ssr: false }
+    { src: '~/plugins/element-ui-plugin.js', ssr: false },
+    // 其他插件,
+    { src: '~/plugins/vue-qriously-plugin.js', ssr: true }
   ]
 }
 

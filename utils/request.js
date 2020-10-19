@@ -4,7 +4,7 @@ import cookie from 'js-cookie'
 
 // 创建axios实例
 const service = axios.create({
-  baseURL: 'http://localhost:8110',
+  baseURL: 'http://localhost:9110',
   timeout: 12000 // 请求超时时间
 })
 
@@ -29,7 +29,11 @@ service.interceptors.response.use(
        * code为非20000是抛错 可结合自己业务进行修改
        */
     const res = response.data
-    if (res.code !== 20000) {
+    if (res.code === 20000) {
+      return response.data
+    } else if (res.code === 25000) {
+      return response.data
+    } else {
       Message({
         message: res.message || 'error',
         type: 'error',
@@ -37,8 +41,6 @@ service.interceptors.response.use(
       })
 
       return Promise.reject('error')
-    } else {
-      return response.data
     }
   },
   error => {

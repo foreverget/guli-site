@@ -95,10 +95,10 @@ export default {
     // 微信登录url token获取
     const token = this.$route.query.token
     if (token) {
-      // 登录成功将token写入coockie
+      // 登录成功后将token写入cookie
       cookie.set('guli_token', token, {
         domain: 'localhost',
-        expires: 1
+        expires: 1 // 1天：如果是数值则单位为天，也可以是Date类型，表示有效期至Date指定时间
       })
       // 跳转页面：擦除url中的token
       // 注意：window对象在created方法中无法被访问，因此要写在mounted中
@@ -107,10 +107,12 @@ export default {
   },
 
   created() {
+    // 传统的通过手机号的方式获取用户信息的过程
     this.getUserInfo()
   },
 
   methods: {
+
     getUserInfo() {
       // 判断客户端是否存在token
       if (!cookie.get('guli_token')) {

@@ -25,12 +25,55 @@
   </div>
 </template>
 <script>
+import payApi from '~/api/pay'
+import orderApi from '~/api/order'
 
 export default {
+
   data() {
     return {
-      payObj: {}
+      timer: null
+    }
+  },
+  // created的时候就查询支付状态，没有必要，因为二维码页面尚未渲染，不可能支付成功
+  mounted() {
+    this.timer = setInterval(() => {
+      this.queryPayStatus()
+    }, 3000)
+  },
+  methods: {
+    // 查询订单状态
+    queryPayStatus() {
+      console.log('payObj', this.payObj)
+      orderApi.queryPayStatus(this.payObj.out_trade_no).then(response => {
+        console.log('查询订单状态：' + response.code)
+
+        // 支付成功后的页面跳转
+        if (response.success) {
+          this.$message.success(response.message)
+          console.log('清除定时器')
+          clearInterval(this.timer)
+          // 三秒后跳转到课程详情页面观看视频
+          setTimeout(() => {
+            this.$router.push({ path: '/course/' + this.payObj.course_id })
+          }, 3000)
+        }
+      })
+    }
+  },
+  async asyncData(page) {
+    console.log('orderNo', page.route.params.id)
+    const response = await payApi.createNative(page.route.params.id)
+
+    return {
+      payObj: response.data
     }
   }
+
+  // data() {
+  //   return {
+  //     payObj: {}
+  //   }
+  // }
 }
 </script>
